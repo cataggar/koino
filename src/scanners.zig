@@ -75,7 +75,7 @@ pub fn unwrap(value: Error!?usize, out: *usize) Error!bool {
     }
 }
 
-var searchFirstCaptureBuffer: [1024]u8 = [_]u8{undefined} ** 1024;
+var searchFirstCaptureBuffer: [1024]u8 = undefined;
 var searchFirstCaptureBufferAllocator = std.heap.FixedBufferAllocator.init(&searchFirstCaptureBuffer);
 
 fn searchFirstCapture(re: Regex, line: []const u8) Error!?usize {
@@ -191,9 +191,9 @@ test "closeCodeFence" {
 }
 
 pub fn htmlBlockEnd1(line: []const u8) bool {
-    return std.ascii.indexOfIgnoreCase(line, "</script>") != null or
-        std.ascii.indexOfIgnoreCase(line, "</pre>") != null or
-        std.ascii.indexOfIgnoreCase(line, "</style>") != null;
+    return std.ascii.findIgnoreCase(line, "</script>") != null or
+        std.ascii.findIgnoreCase(line, "</pre>") != null or
+        std.ascii.findIgnoreCase(line, "</style>") != null;
 }
 
 test "htmlBlockEnd1" {

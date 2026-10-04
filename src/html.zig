@@ -50,7 +50,7 @@ pub fn HtmlFormatter(comptime Writer: type) type {
         }
 
         const NEEDS_ESCAPED = strings.createMap("\"&<>");
-        const HREF_SAFE = strings.createMap("-_.+!*'(),%#@?=;:/,+&$~abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+        const HREF_SAFE = strings.createMap("-_.+!*(),%#@?=;:/,+$~abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
 
         fn dangerousUrl(input: []const u8) !bool {
             return (try scanners.dangerousUrl(input)) != null;
@@ -542,19 +542,30 @@ pub fn HtmlFormatter(comptime Writer: type) type {
 }
 
 test "escaping works as expected" {
-    var buffer = ArrayList(u8).init(std.testing.allocator);
+    var buffer: std.Io.Writer.Allocating = .init(std.testing.allocator);
     defer buffer.deinit();
 
-    var formatter = makeHtmlFormatter(buffer.writer(), std.testing.allocator, .{});
+    var formatter = makeHtmlFormatter(&buffer.writer, std.testing.allocator, .{});
     defer formatter.deinit();
 
     try formatter.escape("<hello & goodbye>");
-    try std.testing.expectEqualStrings("&lt;hello &amp; goodbye&gt;", buffer.items);
+    try std.testing.expectEqualStrings("&lt;hello &amp; goodbye&gt;", buffer.written());
 }
 
 test "lowercase anchor generation" {
-    var formatter = makeHtmlFormatter(std.io.null_writer, std.testing.allocator, .{});
+    var buffer: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buffer.deinit();
+    var formatter = makeHtmlFormatter(&buffer.writer, std.testing.allocator, .{});
     defer formatter.deinit();
 
     try std.testing.expectEqualStrings("yés", try formatter.anchorize("YÉS"));
+}
+
+test "URL attributes escape query separators and apostrophes" {
+    var buffer: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buffer.deinit();
+    var formatter = makeHtmlFormatter(&buffer.writer, std.testing.allocator, .{});
+    defer formatter.deinit();
+    try formatter.escapeHref("https://example.test/?a=1&b=don't");
+    try std.testing.expectEqualStrings("https://example.test/?a=1&amp;b=don&#x27;t", buffer.written());
 }

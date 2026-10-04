@@ -74,7 +74,7 @@ test "isBlank" {
 const SPACES = "\t\n\x0b\x0c\r ";
 
 pub fn ltrim(s: []const u8) []const u8 {
-    return mem.trimLeft(u8, s, SPACES);
+    return mem.trimStart(u8, s, SPACES);
 }
 
 test "ltrim" {
@@ -85,7 +85,7 @@ test "ltrim" {
 }
 
 pub fn rtrim(s: []const u8) []const u8 {
-    return mem.trimRight(u8, s, SPACES);
+    return mem.trimEnd(u8, s, SPACES);
 }
 
 test "rtrim" {
@@ -319,7 +319,8 @@ pub fn unescapeInto(text: []const u8, out: *ArrayList(u8)) !?usize {
         if (text[i] == ' ')
             return null;
         if (text[i] == ';') {
-            var key = [_]u8{'&'} ++ [_]u8{';'} ** (ENTITY_MAX_LENGTH + 1);
+            var key: [ENTITY_MAX_LENGTH + 2]u8 = @splat(';');
+            key[0] = '&';
             @memcpy(key[1 .. i + 1], text[0..i]);
 
             if (htmlentities.lookup(key[0 .. i + 2])) |item| {
@@ -511,7 +512,7 @@ test "toLower" {
 }
 
 pub fn createMap(chars: []const u8) [256]bool {
-    var arr = [_]bool{false} ** 256;
+    var arr: [256]bool = @splat(false);
     for (chars) |c| {
         arr[c] = true;
     }

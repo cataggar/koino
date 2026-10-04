@@ -1,24 +1,25 @@
 .{
     .name = .koino,
     .version = "0.1.0",
-    .minimum_zig_version = "0.15.1",
+    .minimum_zig_version = "0.17.0",
     .fingerprint = 0x2af09c5b5aeed24b,
     .dependencies = .{
         .clap = .{
-            .url = "https://github.com/Hejsil/zig-clap/archive/refs/tags/0.11.0.tar.gz",
-            .hash = "clap-0.11.0-oBajB-HnAQDPCKYzwF7rO3qDFwRcD39Q0DALlTSz5H7e",
+            .url = "git+https://github.com/Hejsil/zig-clap#05faf3905e8548f5cc269a8836e154065e70128d",
+            .hash = "clap-0.12.0-oBajB4XpAQCF1WRKnD5KOKPsnwwT_NNdAJ7Ww3irYJac",
+            .lazy = true,
         },
-        .libpcre_zig = .{
-            .url = "git+https://github.com/kivikakk/libpcre.zig#3f61efd01ec45281c4bc6f8f6d0ae7b718e7056e",
-            .hash = "libpcre_zig-0.1.0-Dtf6CQ04AACiOaA107r6fJ9BpThKZCzDeqp-v5Xv0Ixr",
-        },
-        .htmlentities_zig = .{
-            .url = "git+https://nossa.ee/~talya/htmlentities.zig#50cb7d848e81389c71fc383534ece76a3fc36284",
-            .hash = "htmlentities_zig-0.1.0-zV-DJDYiAwAv5XJgsNlBPl79pWgiOkJ4-8OUgV95Ksb2",
+        .pcre_source = .{
+            .url = "https://ftp.exim.org/pub/pcre/pcre-8.45.tar.gz",
+            .hash = "N-V-__8AADe4kwCrKTPMwJEy-pIlsygGjJKJeHp4YjgH8IMc",
         },
         .uucode = .{
-            .url = "git+https://github.com/jacobsandlund/uucode#57efdfb7eeb04636aa1069ecb8a65b9c2fcaf4cc",
-            .hash = "uucode-0.2.0-ZZjBPl1XVACasBRHQowdN6_UB_jkKpOMgKSkGNEB1vSk",
+            .url = "git+https://github.com/jacobsandlund/uucode#1fb73433bba5d93366c57f23ff2e9d7939746500",
+            .hash = "uucode-0.2.0-ZZjBPm6FVgBcY-79AHV8ckQj86z0JwOyVyj89VeZrEiv",
+        },
+        .translate_c = .{
+            .url = "git+https://codeberg.org/ziglang/translate-c#5c31f38abf3aba28535ea545a2f393716c553d2c",
+            .hash = "translate_c-0.0.0-Q_BUWo5NBwB68fI9lsRU6WtgtSy9jS5M3hCFAjSrnY78",
         },
     },
 
@@ -26,7 +27,10 @@
         "build.zig",
         "Makefile",
         "build.zig.zon",
+        "build",
+        "tools",
         "src",
+        "vendor",
         "examples",
         "LICENSE",
         "README.md",

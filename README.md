@@ -7,27 +7,42 @@ Zig port of [Comrak](https://github.com/kivikakk/comrak).  Maintains 100% spec-c
 
 ## Getting started
 
+The `cataggar/koino` `zig17` branch requires official Zig 0.17.0. Its
+library, CLI, examples, and CommonMark fixture runner use that compiler.
+The small PCRE binding and entity generator are vendored with their licenses
+to adapt their build/I/O APIs; PCRE source, Unicode tables, C translation,
+and the optional CLI parser remain pinned dependencies.
+
 ### Using koino as a library
 
 * Add koino via the zig package manager:
   ```console
-  $ zig fetch --save git+https://nossa.ee/~talya/koino
+  $ zig fetch --save git+https://github.com/cataggar/koino#zig17
   ```
  
 * Add the following to your `build.zig`'s `build` function:
   ```zig
-  const koino_pkg = b.dependency("koino", .{ .optimize = optimize, .target = target });
+  const koino_pkg = b.dependency("koino", .{
+      .optimize = optimize,
+      .target = target,
+      .@"no-cli" = true,
+  });
   exe.root_module.addImport("koino", koino_pkg.module("koino"));
   ```
 
 * Have a look at the bottom of [`parser.zig`](src/parser.zig) to see some test usage.
+
+`--save` resolves the branch to an immutable commit and package hash.
+`no-cli` avoids building the CLI/examples or fetching their optional clap
+dependency. `markdownToHtmlWriter` accepts a Zig `std.Io.Writer`, for example
+`&output.writer` from `std.Io.Writer.Allocating`.
 
 
 ### Using it as a CLI executable
 
 * Clone this repository:
   ```console
-  $ git clone https://nossa.ee/~talya/koino
+  $ git clone --branch zig17 https://github.com/cataggar/koino
   ```
 * Build
   ```console
@@ -42,7 +57,7 @@ There's a `flake.nix` for building or getting a devShell if you're so-inclined.
 
 * Clone this repository (with submodules for the `cmark-gfm` dependency):
   ```console
-  $ git clone --recurse-submodules https://nossa.ee/~talya/koino
+  $ git clone --branch zig17 --recurse-submodules https://github.com/cataggar/koino
   $ cd koino
   ```
 
@@ -50,9 +65,11 @@ There's a `flake.nix` for building or getting a devShell if you're so-inclined.
 
   ```console
   $ zig build test
-  $ make spec
+  $ zig build spec
   ```
 
+The spec runner is native Zig and reads the existing CommonMark fixtures;
+it does not invoke Python.
 
 ## Usage
 
@@ -87,4 +104,3 @@ Documentation is TODO — see:
 
 - [LoLa](https://github.com/MasterQ32/LoLa/blob/d02b0e6774fedbe07276d8af51e1a305cc58fb34/src/tools/render-md-page.zig#L157): for an example of use. Note also the [`build.zig`](https://github.com/MasterQ32/LoLa/blob/d02b0e6774fedbe07276d8af51e1a305cc58fb34/build.zig#L41-L50) declaration.
 - [Markdown to HTML example](./examples/to-html.zig).
-

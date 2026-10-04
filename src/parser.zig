@@ -3,7 +3,7 @@ const assert = std.debug.assert;
 const ascii = std.ascii;
 const ArrayList = std.array_list.Managed;
 
-const main = @import("main.zig");
+const koino = @import("koino.zig");
 const strings = @import("strings.zig");
 const nodes = @import("nodes.zig");
 const scanners = @import("scanners.zig");
@@ -58,8 +58,8 @@ pub const Parser = struct {
     total_size: usize = 0,
     thematic_break_kill_pos: usize = 0,
 
-    special_chars: [256]bool = [_]bool{false} ** 256,
-    skip_chars: [256]bool = [_]bool{false} ** 256,
+    special_chars: [256]bool = @splat(false),
+    skip_chars: [256]bool = @splat(false),
 
     pub fn init(allocator: std.mem.Allocator, options: Options) !Parser {
         const root = try nodes.AstNode.create(allocator, .{
@@ -1026,7 +1026,7 @@ pub const Parser = struct {
 };
 
 fn expectMarkdownHTML(options: Options, markdown: []const u8, html: []const u8) !void {
-    const output = try main.testMarkdownToHtml(options, markdown);
+    const output = try koino.testMarkdownToHtml(options, markdown);
     defer std.testing.allocator.free(output);
     try std.testing.expectEqualStrings(html, output);
 }

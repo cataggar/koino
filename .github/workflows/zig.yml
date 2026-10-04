@@ -8,23 +8,27 @@ jobs:
   tests:
     strategy:
       matrix:
-        zig-version: ["0.15.2"]
         runs-on: ["ubuntu-latest", "macos-latest", "windows-latest"]
     runs-on: ${{ matrix.runs-on }}
     steps:
       - uses: actions/checkout@v6
-      - uses: mlugg/setup-zig@v2
+      - uses: cataggar/ghr/actions/install@ab95a8ea0632291f6b2a1ec0a7e81b11ec8ac01b
+        env:
+          GH_TOKEN: ${{ github.token }}
         with:
-          version: ${{ matrix.zig-version }}
+          tools: cataggar/zig@v0.17.0 RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
       - run: zig build
       - run: zig build test
+      - run: zig build -Doptimize=safe test
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
           submodules: recursive
-      - uses: mlugg/setup-zig@v2
+      - uses: cataggar/ghr/actions/install@ab95a8ea0632291f6b2a1ec0a7e81b11ec8ac01b
+        env:
+          GH_TOKEN: ${{ github.token }}
         with:
-          version: 0.15.2
-      - run: zig fmt --check build.zig src/*.zig
+          tools: cataggar/zig@v0.17.0 RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
+      - run: zig fmt --check build.zig build/pcre.zig src/*.zig tools/*.zig vendor/*.zig examples/to-html.zig

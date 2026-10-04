@@ -10,20 +10,13 @@ exe:
 	zig build run -- --help
 
 spec:
-	zig build
-	cd vendor/cmark-gfm/test && python3 spec_tests.py --program=../../../zig-out/bin/koino
+	zig build spec
 
 fetch-clap:
-	zig fetch --save https://github.com/Hejsil/zig-clap/archive/refs/tags/0.11.0.tar.gz
+	zig fetch --save=clap git+https://github.com/Hejsil/zig-clap#05faf3905e8548f5cc269a8836e154065e70128d
 
-fetch-htmlentities:
-	zig fetch --save git+https://nossa.ee/~talya/htmlentities.zig
-
-fetch-libpcre:
-	zig fetch --save git+https://github.com/kivikakk/libpcre.zig
-
-fetch-zunicode:
-	zig fetch --save git+https://github.com/mishieck/zunicode
+fetch-uucode:
+	zig fetch --save=uucode git+https://github.com/jacobsandlund/uucode#1fb73433bba5d93366c57f23ff2e9d7939746500
 
 example:
 	zig build example

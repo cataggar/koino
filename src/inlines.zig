@@ -25,7 +25,7 @@ pub const Subject = struct {
     pos: usize = 0,
     last_delimiter: ?*Delimiter = null,
     brackets: ArrayList(Bracket),
-    backticks: [MAX_BACKTICKS + 1]usize = [_]usize{0} ** (MAX_BACKTICKS + 1),
+    backticks: [MAX_BACKTICKS + 1]usize = @splat(0),
     scanned_for_backticks: bool = false,
     no_link_openers: bool = true,
     special_chars: *const [256]bool,
@@ -142,7 +142,7 @@ pub const Subject = struct {
     pub fn processEmphasis(self: *Subject, stack_bottom: usize) !void {
         var closer = self.last_delimiter;
 
-        var openers_bottom: [3][128]usize = [_][128]usize{[_]usize{stack_bottom} ** 128} ** 3;
+        var openers_bottom: [3][128]usize = @splat(@splat(stack_bottom));
 
         while (closer != null and closer.?.prev != null and closer.?.prev.?.position > stack_bottom) {
             closer = closer.?.prev;
