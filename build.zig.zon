@@ -11,7 +11,7 @@
         },
         .pcre_source = .{
             .url = "https://ftp.exim.org/pub/pcre/pcre-8.45.tar.gz",
-            .hash = "N-V-__8AADe4kwCrKTPMwJEy-pIlsygGjJKJeHp4YjgH8IMc",
+            .hash = "N-V-__8AADe4kwB9hEkHETeVuGKdlsEikdwt4FojK8ZhPtg5",
         },
         .uucode = .{
             .url = "git+https://github.com/jacobsandlund/uucode#1fb73433bba5d93366c57f23ff2e9d7939746500",

@@ -2,9 +2,9 @@ const std = @import("std");
 
 pub fn create(b: *std.Build, source: *std.Build.Dependency, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) *std.Build.Step.Compile {
     const headers = b.addWriteFiles();
-    _ = headers.addCopyFile(source.path("pcre-8.45/config.h.generic"), "config.h");
-    _ = headers.addCopyFile(source.path("pcre-8.45/pcre.h.generic"), "pcre.h");
-    const tables = headers.addCopyFile(source.path("pcre-8.45/pcre_chartables.c.dist"), "pcre_chartables.c");
+    _ = headers.addCopyFile(source.path("config.h.generic"), "config.h");
+    _ = headers.addCopyFile(source.path("pcre.h.generic"), "pcre.h");
+    const tables = headers.addCopyFile(source.path("pcre_chartables.c.dist"), "pcre_chartables.c");
     const lib = b.addLibrary(.{
         .name = "pcre",
         .linkage = .static,
@@ -15,7 +15,7 @@ pub fn create(b: *std.Build, source: *std.Build.Dependency, target: std.Build.Re
         }),
     });
     lib.root_module.addIncludePath(headers.getDirectory());
-    lib.root_module.addIncludePath(source.path("pcre-8.45"));
+    lib.root_module.addIncludePath(source.path("."));
     lib.installHeader(headers.getDirectory().path(b, "pcre.h"), "pcre.h");
     const flags: []const []const u8 = &.{
         "-DHAVE_CONFIG_H",
@@ -29,7 +29,7 @@ pub fn create(b: *std.Build, source: *std.Build.Dependency, target: std.Build.Re
     };
     lib.root_module.addCSourceFile(.{ .file = tables, .flags = flags });
     lib.root_module.addCSourceFiles(.{
-        .root = source.path("pcre-8.45"),
+        .root = source.path("."),
         .flags = flags,
         .files = &.{
             "pcre_byte_order.c", "pcre_compile.c",  "pcre_config.c",
